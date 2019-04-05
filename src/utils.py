@@ -1,4 +1,5 @@
 import pandas as pd
+from typing import Callable, Sequence, Optional
 from multiprocessing import Pool, cpu_count
 from tqdm import tqdm, tqdm_notebook
 
@@ -29,8 +30,12 @@ def flatmap(series: pd.Series, include_count: bool = False) -> pd.DataFrame:
     return res
 
 
-def parallelize(func, iterable):
-    with Pool(cpu_count()) as p:
+def parallelize(func: Callable,
+                iterable: Sequence,
+                n_process: Optional[int] = None) -> Sequence:
+    if n_process is None:
+        n_process = cpu_count()
+    with Pool(n_process) as p:
         tqdm_func = tqdm_notebook if in_ipynb() else tqdm
 
         return list(tqdm_func(p.imap(func, iterable),
