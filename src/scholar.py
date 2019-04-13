@@ -4,7 +4,7 @@ import requests
 from bs4 import BeautifulSoup
 from IPython.display import display
 
-from .utils import remove_middle_names
+from .text_utils import remove_middle_names
 
 
 class Scholar(object):

@@ -1,12 +1,8 @@
 import pandas as pd
-from typing import Callable, Sequence, Optional
+from typing import Callable, Sequence, Optional, Any, Dict
 from multiprocessing import Pool, cpu_count
-from tqdm import tqdm, tqdm_notebook
-
-
-def remove_middle_names(name: str) -> str:
-    names = name.split()
-    return ' '.join([names[0], names[-1]])
+from tqdm import tqdm, tqdm_notebook, trange, tnrange
+from functools import partial, update_wrapper
 
 
 def flatmap(series: pd.Series, include_count: bool = False) -> pd.DataFrame:
@@ -49,3 +45,15 @@ def in_ipynb() -> bool:
         return True
     except:
         return False
+
+
+def tqdm_f(is_range: bool = False):
+    if is_range:
+        return tnrange if in_ipynb() else trange
+    else:
+        return tqdm_notebook if in_ipynb() else tqdm
+
+
+def curry(func: Callable[[Any], Any],
+          **kwargs: Dict[Any, Any]) -> Callable[[Any], Any]:
+    return update_wrapper(partial(func, **kwargs), func)
