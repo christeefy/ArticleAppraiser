@@ -70,7 +70,8 @@ def top_topics(model: textacy.TopicModel,
     '''
     return (
         pd.DataFrame(map(lambda x: [tuple(sorted(x[1]))],
-                         model.top_doc_topics(doc_topic_matrix, top_n=n_topics)),
+                         model.top_doc_topics(doc_topic_matrix,
+                                              top_n=n_topics)),
                      columns=['top_topics'])
     )
 
@@ -126,8 +127,8 @@ def featurize_publish_date(df: pd.DataFrame,
                                           sets. (default: {None})
 
     Returns:
-        pd.DataFrame -- DataFrame containing original documents in `df`, with an
-                        additional column named `modTopicScore`.
+        pd.DataFrame -- DataFrame containing original documents in `df`, with
+                        an additional column named `modTopicScore`.
     '''
     if prior is not None:
         # Make a deep copy of `prior` to guarantee that changes are local
@@ -177,16 +178,19 @@ def load_dataframe(src: str,
 
     Keyword Arguments:
         train_df_dir {str}
-        -- Path to training dataframe. (default: {'data/dataframes/main_df_scored.pkl'})
+        -- Path to training dataframe.
+           (default: {'data/dataframes/main_df_scored.pkl'})
         scholars_dir {str}
-        -- Path to scholars dataframe. (default: {'data/dataframes/scholars_df.pkl'})
+        -- Path to scholars dataframe.
+           (default: {'data/dataframes/scholars_df.pkl'})
         vectorizer_dir {str}
         -- Path to vectorizer model. (default: {'data/nlp/vectorizer.pkl'})
         topic_model_dir {str}
         -- Path to topic model. (default: {'data/nlp/topic_model_21.pkl'})
 
     Raises:
-        TypeError -- `src` must be a JSON file, while all other arguments a Pickle file.
+        TypeError -- `src` must be a JSON file, while all other arguments
+                     must be a Pickle file.
         FileNotFoundError -- If no file exists at provided paths.
 
     Returns:
@@ -200,7 +204,8 @@ def load_dataframe(src: str,
             var = Path(var)
 
         if var.suffix != ('.pkl' if i else '.json'):
-            raise TypeError(f"Only {'pickle' if i else 'JSON'} files can be processed.")
+            raise TypeError(f"Only {'pickle' if i else 'JSON'} "
+                            "files can be processed.")
         if not scholars_dir.is_file():
             raise FileNotFoundError('Scholar file is not found.')
 
