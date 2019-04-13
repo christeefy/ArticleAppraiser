@@ -21,10 +21,22 @@ def coherence_scores(scores: Sequence[float]) -> None:
     Arguments:
         scores {Sequence[float]} -- A list of coherence scores.
     '''
-
-    trace = go.Scatter(x=list(range(1, len(scores) + 1)), y=scores)
+    # Create plot trace
+    trace = go.Scatter(x=list(range(1, len(scores) + 1)),
+                       y=np.round(scores, 2))
     data = [trace]
-    pyo.iplot(data)
+
+    # Define layout
+    layout = go.Layout(
+        showlegend=False,
+        xaxis=go.layout.XAxis(title='# Topics'),
+        yaxis=go.layout.YAxis(title='Coherence Score'),
+        title='Coherence Scores by Number of Topics'
+    )
+
+    # Plot figure
+    fig = go.Figure(data, layout)
+    pyo.iplot(fig)
 
 
 def top_terms(model: TopicModel,
@@ -99,11 +111,15 @@ def topic_trends(df: pd.DataFrame, top_n: int = 10) -> None:
            containing counts of journal articles.
 
     Keyword Arguments:
-        top_n {int} -- Number of top topic combinations to plot. (default: {10})
+        top_n {int} -- Number of top topic combinations to plot.
+                       (default: {10})
     '''
 
     # Filter for the `top_n` topics in df
+    df = df.applymap(lambda x: len(x) if hasattr(x, '__len__') else 0)
+
     docs_per_topic = np.argsort(df.sum(axis=1))[:-top_n - 1:-1]
+
     df = df.iloc[docs_per_topic]
 
     data = []
@@ -112,6 +128,11 @@ def topic_trends(df: pd.DataFrame, top_n: int = 10) -> None:
         data.append(trace)
 
     # Create layout and plot figure
-    layout = go.Layout(showlegend=True)
+    layout = go.Layout(
+        showlegend=True,
+        title=f'Trends for the Top {top_n} Topic Combinations',
+        xaxis=go.layout.XAxis(title='Year'),
+        yaxis=go.layout.YAxis(title='Cumulative # of Articles')
+    )
     fig = go.Figure(data, layout)
     pyo.iplot(fig)
