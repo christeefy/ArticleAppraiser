@@ -182,7 +182,6 @@ class Coherence(object):
         # the numer of topics
         score = (counts * np.log((num + self._inv_term_sum) / denom)).sum()
         score /= counts.sum()
-        score /= len(self.topic_terms)
 
         # Save results for memoization
         self._coh = score
