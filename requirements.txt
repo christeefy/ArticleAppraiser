@@ -1,6 +1,6 @@
 beautifulsoup4==4.7.1
 en-core-web-lg==2.0.0
-numpy==1.16.2
+numpy==1.22.0
 pandas==0.24.2
 plotly==3.7.0
 textacy==0.6.2
